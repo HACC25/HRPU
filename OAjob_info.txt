@@ -1,0 +1,23 @@
+Sections of the Application: 
+    Personal Information - can be ignored
+    Preferences - no fucking idea
+    Education (could be multiple): 
+    - Dates
+    - School Name
+    - Graduated?
+    - Degree received
+    - Major
+    - Units completed
+    Work Experience (could be multiple): 
+    - Dates
+    - Employer
+    - Position Title
+    - Hours per week
+    - # of employees supervised
+    - Duties (long text section; applicant could write bullet points, paragraph, etc.)
+    Certificates and Licenses:
+    - 
+    Skills:
+    - Office Skills: typing, data entry
+    - Other skills: 
+
