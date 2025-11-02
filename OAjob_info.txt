@@ -1,13 +1,17 @@
+DISCLAIMER: I am only including information I believe is relevant to the AI screening. If I was unsure if it was relevant, I included it anyways. Feel free to edit.
+
 Sections of the Application: 
+
     Personal Information - can be ignored
     Preferences - no fucking idea
     Education (could be multiple): 
     - Dates
     - School Name
-    - Graduated?
+    - Graduated (yes or no)
     - Degree received
     - Major
     - Units completed
+
     Work Experience (could be multiple): 
     - Dates
     - Employer
@@ -15,9 +19,37 @@ Sections of the Application:
     - Hours per week
     - # of employees supervised
     - Duties (long text section; applicant could write bullet points, paragraph, etc.)
+    - Reason for leaving
+
     Certificates and Licenses:
     - 
+
     Skills:
-    - Office Skills: typing, data entry
-    - Other skills: 
+    - Office Skills: typing (int), data entry (int)
+    - Other skills (long text section; applicant could write bullet points, paragraph, etc.)
+    - Language(s) - lists the language and then applicant selects checkboxes for speak, read, write
+
+    Additional Information:
+    - 
+
+    Agency-Wide Questions:
+    - Are you legally authorized to work in the United States? (yes or no)
+    - Will you now or in the future require work visa sponsorship (e.g. H-1B, TN, etc.) to legally work in the United States for the State of Hawaii? (yes or no)
+    - Are you interested in being considered for positions that require possession of a valid driver's license? (yes or no)
+    
+    Job Specific Supplemental Questions (**They have to answer these questions with their application. If a resume is submitted instead of answering the questions, reject.):
+        Basic Expeirience Requirement: 
+        - 6 months of experience OR high school diploma/high school diploma equivalent? (yes or no)
+        - 
+        Clerical Experience Requirement:
+        - How many years of clerical work experience as described in the Minimum Qualification Requirements do you possess? (I think there is some sort of drop down menu)
+        - If yes to above, there is a long text section where they enter the following for each clerical experience:
+            - Employer's name, your job title, dates of employment (mo/yr-mo/yr) and average number of hours worked per week.
+            - Describe your employer to include the organizational structure, the section you worked in, the services provided and the clientele served.
+            - What was the primary function of your position, including your major duties and responslbllltles?
+            - Describe your specific duties which demonstrate the following. Include the steps you took and examples of the tasks you performed.
+                - The performance of a variety of clerical tasks.
+                - Your knowledge of office practices & procedures.
+            - What office equipment, technologies and/or software did you use?
+            - What was the job title of your supervisor? Describe In detall how your duties and level of authority differed from your supervisor.
 
