@@ -4,7 +4,7 @@
 Django>=5.1.0
 
 # ML/AI Libraries
-#unccoment line below for torch with cuda support
+#unccoment line below for torch with cuda support will make install much longer
 #--extra-index-url https://download.pytorch.org/whl/cu126
 torch>=2.5.0
 
