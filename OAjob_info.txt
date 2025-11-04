@@ -1,4 +1,5 @@
 DISCLAIMER: I am only including information I believe is relevant to the AI screening. If I was unsure if it was relevant, I included it anyways. Feel free to edit.
+*** The yes or no questions are short text sections.
 
 Sections of the Application: 
 
@@ -18,7 +19,6 @@ Sections of the Application:
     - Dates
     - Employer
     - Position Title
-    - Hours per week
     - # of employees supervised
     - Duties (long text section; applicant could write bullet points, paragraph, etc.)
     - Reason for leaving
@@ -44,7 +44,6 @@ Sections of the Application:
     Job Specific Supplemental Questions (**They have to answer these questions with their application. If a resume is submitted instead of answering the questions, reject.):
         Basic Expeirience Requirement: 
         - 6 months of experience OR high school diploma/high school diploma equivalent? (yes or no)
-        - 
         Clerical Experience Requirement:
         - How many years of clerical work experience as described in the Minimum Qualification Requirements do you possess? (I think there is some sort of drop down menu)
         - If yes to above, there is a long text section where they enter the following for each clerical experience 
