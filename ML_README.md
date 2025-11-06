@@ -56,7 +56,7 @@ python manage.py train_model \
   --job-data-dir AGLO_JobData \
   --labels-file AGLO_labels.json \
   --output-dir ./trained_models \
-  --epochs 10 \
+  --epochs 1 \
   --batch-size 8
 ```
 
@@ -78,7 +78,7 @@ The trained model will be saved to `./trained_models/AGLO/`
 ```bash
 python manage.py screen_resumes \
   --job-code AGLO \
-  --model-path ./trained_models/AGLO \
+  --model-path ./trained_models/AGLO/best_model.pt \
   --resume-file path/to/resume.docx
 ```
 
@@ -86,17 +86,19 @@ python manage.py screen_resumes \
 ```bash
 python manage.py screen_resumes \
   --job-code AGLO \
-  --model-path ./trained_models/AGLO \
+  --model-path ./trained_models/AGLO/best_model.pt \
   --resume-dir path/to/resumes/ \
   --output-file screening_results.json
 ```
 
 **Options:**
 - `--job-code`: Job position code
-- `--model-path`: Path to trained model directory
+- `--model-path`: Path to trained model file (e.g., `./trained_models/AGLO/best_model.pt`)
 - `--resume-file`: Single resume to screen
 - `--resume-dir`: Directory with multiple resumes (PDF or DOCX)
 - `--output-file`: Save results to JSON file (optional)
+
+**Note for PowerShell users:** Replace backslashes (`\`) with backticks (`` ` ``) for line continuation, or write commands on a single line.
 
 ### Output Format
 Results include:
@@ -115,12 +117,12 @@ python manage.py train_model \
   --job-code AGLO \
   --job-data-dir AGLO_JobData \
   --labels-file AGLO_labels.json \
-  --epochs 10
+  --epochs 1
 
-# 3. Screen new applications
+# 3. Screen new applications (or use AGLO_JobData for training data)
 python manage.py screen_resumes \
   --job-code AGLO \
-  --model-path ./trained_models/AGLO \
+  --model-path ./trained_models/AGLO/best_model.pt \
   --resume-dir new_applications/ \
   --output-file results.json
 ```

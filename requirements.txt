@@ -29,3 +29,4 @@ joblib>=1.4.0
 # Additional useful packages
 huggingface-hub>=0.26.0
 safetensors>=0.4.0
+transformers
