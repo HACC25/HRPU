@@ -13,12 +13,12 @@ class Command(BaseCommand):
             {
                 'title': 'Agricultural Loan Officer',
                 'code': 'AGLO',
-                'description': 'Government agricultural loan officer position responsible for processing and managing agricultural loans and financial assistance programs for farmers.',
+                'description': 'Government agricultural loan officer position responsible for processing and managing agricultural loans and financial assistance programs',
                 'minimum_qualifications': 'Bachelor\'s degree in Agriculture, Finance, or related field, experience in loan processing and agricultural finance.',
             },
             {
                 'title': 'Office Assistant',
-                'code': 'OFAS',
+                'code': 'OA',
                 'description': 'Office assistant position providing administrative and clerical support for government office operations.',
                 'minimum_qualifications': 'High school diploma or equivalent, proficiency in office software, strong organizational and communication skills.',
             },
