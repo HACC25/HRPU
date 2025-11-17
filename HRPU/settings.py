@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-vi0w3h*4(pf_e@=*kv)ag&q-5ztqsmi1tea0mvwdm3q)=z&w_b
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['34.218.144.111', 'localhost]
+ALLOWED_HOSTS = ['34.218.144.111', 'localhost']
 
 
 # Application definition
@@ -76,7 +76,12 @@ WSGI_APPLICATION = 'HRPU.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'hrpudb',
+        'USER': 'admin',
+        'PASSWORD': 'password',
+        'HOST': 'localhost',
+        'PORT': ''
     }
 }
 
