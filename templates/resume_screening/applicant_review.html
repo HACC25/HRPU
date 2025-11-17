@@ -1,0 +1,357 @@
+{% extends "resume_screening/base.html" %}
+
+{% block title %}Review Applicant - {{ applicant.full_name }}{% endblock %}
+
+{% block extra_styles %}
+/* Layout */
+.container {
+  display: grid;
+  grid-template-columns: 1.2fr 2fr;
+  gap: 1.5rem;
+  padding: 1.5rem;
+  min-height: calc(100vh - 60px);
+}
+
+/* Resume Section */
+.resume-section {
+  background: white;
+  border-radius: 10px;
+  padding: 1rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+}
+
+.resume-section h2 {
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+  color: #1a4d2e;
+}
+
+.resume-box {
+  flex: 1;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background: #fdfdfd;
+  overflow-y: auto;
+  padding: 1rem;
+  min-height: 400px;
+  white-space: pre-wrap;
+  font-family: monospace;
+  font-size: 0.9rem;
+}
+
+.document-viewer {
+  width: 100%;
+  height: 600px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+.download-link {
+  display: inline-block;
+  margin-top: 0.5rem;
+  color: #1a4d2e;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.download-link:hover {
+  text-decoration: underline;
+}
+
+/* Right side decision panel */
+.decision-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.decision-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.ai-decision {
+  background: #fff;
+  padding: 0.8rem 1rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  flex: 1;
+  min-width: 200px;
+  text-align: center;
+  font-weight: 600;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.action-buttons button {
+  background: #1a4d2e;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 0.6rem 1rem;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  font-weight: 500;
+}
+
+.action-buttons button:hover {
+  background: #256f46;
+}
+
+.action-buttons .not-qualified {
+  background: #b32b2b;
+}
+
+.action-buttons .not-qualified:hover {
+  background: #d33a3a;
+}
+
+/* Summary box */
+.summary-box,
+.bullet-box {
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  padding: 1rem 1.5rem;
+}
+
+.summary-box h3,
+.bullet-box h3 {
+  margin-top: 0;
+  color: #1a4d2e;
+}
+
+.summary-box textarea {
+  width: 100%;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  padding: 0.75rem;
+  font-size: 0.95rem;
+  resize: vertical;
+  min-height: 100px;
+  font-family: inherit;
+}
+
+.bullet-box ul {
+  margin: 0.5rem 0 0 1rem;
+  padding-left: 1rem;
+}
+
+.bullet-box li {
+  margin-bottom: 0.4rem;
+}
+
+.bullet-box li.met {
+  color: #28a745;
+}
+
+.bullet-box li.not-met {
+  color: #dc3545;
+}
+
+.confidence-bar {
+  margin-top: 0.5rem;
+  height: 8px;
+  background: #e0e0e0;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.confidence-fill {
+  height: 100%;
+  background: #1a4d2e;
+  transition: width 0.3s ease;
+}
+
+@media (max-width: 900px) {
+  .container {
+    grid-template-columns: 1fr;
+  }
+}
+{% endblock %}
+
+{% block content %}
+<div class="container">
+  <!-- Left: Applicant Resume -->
+  <div class="resume-section">
+    <h2>Application: {{ applicant.full_name }}</h2>
+    <p style="margin: 0.5rem 0; color: #666;">
+      Position: {{ applicant.job_position.title }}<br>
+      Email: {{ applicant.email }}<br>
+      Applied: {{ applicant.applied_at|date:"M d, Y" }}
+    </p>
+
+    {% if applicant.application_file %}
+      <a href="{% url 'serve_application_file' applicant.id %}" class="download-link" target="_blank">
+        📄 Download/View Application File
+      </a>
+    {% endif %}
+
+    <h3 style="margin-top: 1rem; font-size: 1rem;">Extracted Text:</h3>
+    <div class="resume-box">
+      {% if applicant.extracted_text %}
+        {{ applicant.extracted_text }}
+      {% else %}
+        <em style="color: #999;">No text extracted yet.</em>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- Right: Decision Panel -->
+  <div class="decision-panel">
+    <div class="decision-header">
+      <div class="ai-decision">
+        {% if screening_result %}
+          Decision made by AI screener:
+          {% if screening_result.classification == 'LIKELY_QUALIFIED' %}
+            <span style="color:#28a745;">Qualified</span>
+          {% elif screening_result.classification == 'LIKELY_NOT_QUALIFIED' %}
+            <span style="color:#dc3545;">Not Qualified</span>
+          {% else %}
+            <span style="color:#ffc107;">Needs Review</span>
+          {% endif %}
+          <div class="confidence-bar">
+            <div class="confidence-fill" style="width: {{ confidence_percentage|floatformat:0 }}%"></div>
+          </div>
+          <small style="color: #666;">Confidence: {{ confidence_percentage|floatformat:1 }}%</small>
+        {% else %}
+          <span style="color: #999;">Not Screened</span>
+        {% endif %}
+      </div>
+      <div class="action-buttons">
+        <button class="qualified" onclick="updateDecision('LIKELY_QUALIFIED')">Mark as Qualified</button>
+        <button class="not-qualified" onclick="updateDecision('LIKELY_NOT_QUALIFIED')">Mark as NOT Qualified</button>
+      </div>
+    </div>
+
+    {% if screening_result %}
+    <div class="summary-box">
+      <h3>AI Explanation</h3>
+      <p>{{ screening_result.explanation }}</p>
+
+      <h3 style="margin-top: 1rem;">Human Review Notes</h3>
+      <textarea id="human-notes" placeholder="Add your notes here...">{{ screening_result.human_notes }}</textarea>
+      <button class="action-buttons qualified" style="margin-top: 0.5rem; width: auto;" onclick="saveNotes()">
+        Save Notes
+      </button>
+    </div>
+
+    <div class="bullet-box">
+      <h3>Requirements Assessment</h3>
+      {% if requirement_bullets %}
+        <ul>
+          {% for req in requirement_bullets %}
+            <li class="{% if req.met %}met{% else %}not-met{% endif %}">
+              {% if req.met %}✓{% else %}✗{% endif %} {{ req.name }}
+            </li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p style="color: #666;">No detailed requirements available.</p>
+      {% endif %}
+
+      <p style="margin-top: 1rem; font-size: 0.9rem; color: #666;">
+        Requirements met: {{ screening_result.criteria_scores.requirements_met|default:"N/A" }} /
+        {{ requirement_bullets|length }}
+      </p>
+    </div>
+    {% else %}
+    <div class="summary-box">
+      <h3>No Screening Result</h3>
+      <p>This application has not been screened yet. You can manually review it or re-run the screening process.</p>
+    </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+  function updateDecision(decision) {
+    const notes = document.getElementById('human-notes')?.value || '';
+
+    if (!confirm(`Are you sure you want to mark this applicant as ${decision.replace('LIKELY_', '').replace('_', ' ')}?`)) {
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append('decision', decision);
+    formData.append('notes', notes);
+
+    fetch(`/api/update-decision/{{ applicant.id }}/`, {
+      method: 'POST',
+      headers: {
+        'X-CSRFToken': getCookie('csrftoken')
+      },
+      body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        alert(data.message);
+        window.location.reload();
+      } else {
+        alert('Error: ' + data.message);
+      }
+    })
+    .catch(error => {
+      alert('Error updating decision: ' + error);
+    });
+  }
+
+  function saveNotes() {
+    const notes = document.getElementById('human-notes').value;
+    {% if screening_result %}
+    const currentDecision = '{{ screening_result.human_decision|default:screening_result.classification }}';
+    {% else %}
+    const currentDecision = 'NEEDS_REVIEW';
+    {% endif %}
+
+    const formData = new FormData();
+    formData.append('decision', currentDecision);
+    formData.append('notes', notes);
+
+    fetch(`/api/update-decision/{{ applicant.id }}/`, {
+      method: 'POST',
+      headers: {
+        'X-CSRFToken': getCookie('csrftoken')
+      },
+      body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        alert('Notes saved successfully!');
+      } else {
+        alert('Error: ' + data.message);
+      }
+    })
+    .catch(error => {
+      alert('Error saving notes: ' + error);
+    });
+  }
+
+  function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+      const cookies = document.cookie.split(';');
+      for (let i = 0; i < cookies.length; i++) {
+        const cookie = cookies[i].trim();
+        if (cookie.substring(0, name.length + 1) === (name + '=')) {
+          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+          break;
+        }
+      }
+    }
+    return cookieValue;
+  }
+</script>
+{% endblock %}

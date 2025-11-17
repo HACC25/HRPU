@@ -1,0 +1,239 @@
+{% extends "resume_screening/base.html" %}
+
+{% block title %}Dashboard - Resume Screening{% endblock %}
+
+{% block extra_styles %}
+/* Filter section */
+.filters {
+  background: #ffffff;
+  padding: 1rem 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  flex-wrap: wrap;
+}
+
+.filters select, .filters input {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  margin-right: 1rem;
+}
+
+/* Application list */
+.application-list {
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.application-card {
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  padding: 1rem 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.application-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.app-info {
+  flex: 1;
+  min-width: 250px;
+}
+
+.app-info h3 {
+  margin: 0;
+  font-size: 1.1rem;
+  color: #1a4d2e;
+}
+
+.app-info p {
+  margin: 0.3rem 0;
+  color: #555;
+}
+
+.label {
+  display: inline-block;
+  padding: 0.3rem 0.6rem;
+  border-radius: 5px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: white;
+  margin-right: 0.5rem;
+}
+
+.qualified {
+  background: #28a745;
+}
+
+.not-qualified {
+  background: #dc3545;
+}
+
+.review {
+  background: #ffc107;
+  color: #333;
+}
+
+.archive-btn {
+  background: #1a4d2e;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.archive-btn:hover {
+  background: #256f46;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 3rem;
+  color: #666;
+}
+
+@media (max-width: 600px) {
+  .application-card {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .archive-btn {
+    margin-top: 0.5rem;
+  }
+}
+{% endblock %}
+
+{% block content %}
+<!-- Filter Section -->
+<div class="filters">
+  <div>
+    <label for="filter-id">Filter by ID or Name:</label>
+    <input type="text" id="filter-id" placeholder="Enter ID or name..." value="{{ filter_id }}" />
+  </div>
+  <div>
+    <label for="sort">Sort:</label>
+    <select id="sort">
+      <option value="newest" {% if sort_by == 'newest' %}selected{% endif %}>Newest</option>
+      <option value="oldest" {% if sort_by == 'oldest' %}selected{% endif %}>Oldest</option>
+      <option value="id_asc" {% if sort_by == 'id_asc' %}selected{% endif %}>ID Ascending</option>
+      <option value="id_desc" {% if sort_by == 'id_desc' %}selected{% endif %}>ID Descending</option>
+    </select>
+  </div>
+</div>
+
+<!-- Application List -->
+<div class="application-list">
+  {% if applicants %}
+    {% for applicant in applicants %}
+    <div class="application-card" onclick="window.location.href='{% url 'applicant_review' applicant.id %}'">
+      <div class="app-info">
+        <h3>ID: {{ applicant.display_id }} — {{ applicant.full_name }}</h3>
+        {% if applicant.screening_result %}
+          {% if applicant.screening_result.classification == 'LIKELY_QUALIFIED' %}
+            <span class="label qualified">Qualified</span>
+          {% elif applicant.screening_result.classification == 'LIKELY_NOT_QUALIFIED' %}
+            <span class="label not-qualified">Not Qualified</span>
+          {% else %}
+            <span class="label review">Needs Human Review</span>
+          {% endif %}
+          <p>{{ applicant.screening_result.explanation|truncatewords:20 }}</p>
+        {% else %}
+          <span class="label review">Not Screened</span>
+          <p>Application pending review.</p>
+        {% endif %}
+      </div>
+      <button class="archive-btn" onclick="archiveApplicant(event, {{ applicant.id }})">Archive</button>
+    </div>
+    {% endfor %}
+  {% else %}
+    <div class="empty-state">
+      <h2>No applications found</h2>
+      <p>Try adjusting your filters or check the other positions.</p>
+    </div>
+  {% endif %}
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+  // Handle filter changes
+  const filterInput = document.getElementById('filter-id');
+  const sortSelect = document.getElementById('sort');
+
+  filterInput.addEventListener('change', function() {
+    updateFilters();
+  });
+
+  sortSelect.addEventListener('change', function() {
+    updateFilters();
+  });
+
+  function updateFilters() {
+    const params = new URLSearchParams(window.location.search);
+    params.set('filter_id', filterInput.value);
+    params.set('sort', sortSelect.value);
+    window.location.search = params.toString();
+  }
+
+  // Archive applicant
+  function archiveApplicant(event, applicantId) {
+    event.stopPropagation(); // Prevent card click
+
+    if (!confirm('Are you sure you want to archive this applicant?')) {
+      return;
+    }
+
+    fetch(`/api/archive/${applicantId}/`, {
+      method: 'POST',
+      headers: {
+        'X-CSRFToken': getCookie('csrftoken'),
+        'Content-Type': 'application/json'
+      }
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        alert(data.message);
+        window.location.reload();
+      } else {
+        alert('Error: ' + data.message);
+      }
+    })
+    .catch(error => {
+      alert('Error archiving applicant: ' + error);
+    });
+  }
+
+  // Get CSRF token from cookies
+  function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+      const cookies = document.cookie.split(';');
+      for (let i = 0; i < cookies.length; i++) {
+        const cookie = cookies[i].trim();
+        if (cookie.substring(0, name.length + 1) === (name + '=')) {
+          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+          break;
+        }
+      }
+    }
+    return cookieValue;
+  }
+</script>
+{% endblock %}

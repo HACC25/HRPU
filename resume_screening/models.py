@@ -49,6 +49,7 @@ class Applicant(models.Model):
     extracted_text = models.TextField(blank=True, help_text="Raw text extracted from application document")
 
     applied_at = models.DateTimeField(auto_now_add=True)
+    archived = models.BooleanField(default=False, help_text="Whether this applicant has been archived")
 
     class Meta:
         ordering = ['-applied_at']
@@ -56,6 +57,16 @@ class Applicant(models.Model):
 
     def __str__(self):
         return f"{self.first_name} {self.last_name} - {self.job_position.code}"
+
+    @property
+    def full_name(self):
+        """Return full name of applicant"""
+        return f"{self.first_name} {self.last_name}"
+
+    @property
+    def display_id(self):
+        """Return display ID for applicant (using primary key)"""
+        return f"{self.pk:05d}" if self.pk else "N/A"
 
 
 class ScreeningResult(models.Model):

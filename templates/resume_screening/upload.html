@@ -1,0 +1,173 @@
+{% extends "resume_screening/base.html" %}
+
+{% block title %}Upload Resume - Resume Screening{% endblock %}
+
+{% block extra_styles %}
+.container-card {
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 5px 15px -5px rgba(0, 0, 0, 0.04);
+  transition: transform 0.3s ease;
+  background: white;
+  max-width: 600px;
+  margin: 3rem auto;
+  padding: 2rem;
+  border-radius: 12px;
+  border: 1px solid #e0e0e0;
+}
+
+.container-card:hover {
+  transform: translateY(-2px);
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-group label {
+  display: block;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+  color: #333;
+}
+
+.form-group input,
+.form-group select {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1rem;
+  transition: border-color 0.2s ease;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+  outline: none;
+  border-color: #1a4d2e;
+}
+
+.form-group input[type="file"] {
+  padding: 0.5rem;
+  cursor: pointer;
+}
+
+.submit-btn {
+  width: 100%;
+  background: #1a4d2e;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.submit-btn:hover {
+  background: #256f46;
+}
+
+.submit-btn:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+h1 {
+  color: #1a4d2e;
+  margin-bottom: 0.5rem;
+}
+
+.subtitle {
+  color: #666;
+  margin-bottom: 1.5rem;
+  font-size: 0.95rem;
+}
+{% endblock %}
+
+{% block content %}
+<div class="container-card">
+  <h1>Upload Application</h1>
+  <p class="subtitle">PDF and DOCX formats are supported. The application will be automatically screened.</p>
+
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    <div class="form-group">
+      <label for="first_name">First Name *</label>
+      <input
+        type="text"
+        id="first_name"
+        name="first_name"
+        required
+        placeholder="Enter first name"
+      />
+    </div>
+
+    <div class="form-group">
+      <label for="last_name">Last Name *</label>
+      <input
+        type="text"
+        id="last_name"
+        name="last_name"
+        required
+        placeholder="Enter last name"
+      />
+    </div>
+
+    <div class="form-group">
+      <label for="email">Email Address *</label>
+      <input
+        type="email"
+        id="email"
+        name="email"
+        required
+        placeholder="applicant@example.com"
+      />
+    </div>
+
+    <div class="form-group">
+      <label for="job_position">Job Position *</label>
+      <select id="job_position" name="job_position" required>
+        <option value="">-- Select a position --</option>
+        {% for position in positions %}
+        <option value="{{ position.id }}">{{ position.title }} ({{ position.code }})</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="application_file">Application File (.pdf or .docx) *</label>
+      <input
+        type="file"
+        id="application_file"
+        name="application_file"
+        required
+        accept=".pdf,.docx"
+      />
+    </div>
+
+    <button type="submit" class="submit-btn">
+      Upload and Screen Application
+    </button>
+  </form>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+  // Client-side validation for file type
+  const fileInput = document.getElementById('application_file');
+  const submitBtn = document.querySelector('.submit-btn');
+
+  fileInput.addEventListener('change', function() {
+    const file = this.files[0];
+    if (file) {
+      const fileName = file.name.toLowerCase();
+      if (!fileName.endsWith('.pdf') && !fileName.endsWith('.docx')) {
+        alert('Please select a PDF or DOCX file.');
+        this.value = '';
+      }
+    }
+  });
+</script>
+{% endblock %}

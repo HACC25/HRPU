@@ -1,0 +1,35 @@
+{
+  "AGLO": {
+    "job_name": "Agricultural Loan Officer",
+    "num_requirements": 5,
+    "num_questions": 13,
+    "requirements": [
+      "basic",
+      "credit_analysis_1y",
+      "farm_business_2y",
+      "ag_loan_2y",
+      "supervisory_aptitude"
+    ],
+    "hybrid_thresholds": {
+      "qualified": 5,
+      "not_qualified": 2
+    },
+    "file_prefix": "AG LOAN OFF"
+  },
+  "OAIV": {
+    "job_name": "Office Assistant IV",
+    "num_requirements": 4,
+    "num_questions": 10,
+    "requirements": [
+      "typing_40wpm",
+      "basic_6m",
+      "clerical_2y",
+      "supervisory_aptitude"
+    ],
+    "hybrid_thresholds": {
+      "qualified": 4,
+      "not_qualified": 1
+    },
+    "file_prefix": "OA IV"
+  }
+}
