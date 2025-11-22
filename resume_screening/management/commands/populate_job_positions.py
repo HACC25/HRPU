@@ -18,7 +18,7 @@ class Command(BaseCommand):
             },
             {
                 'title': 'Office Assistant',
-                'code': 'OA',
+                'code': 'OAIV',
                 'description': 'Office assistant position providing administrative and clerical support for government office operations.',
                 'minimum_qualifications': 'High school diploma or equivalent, proficiency in office software, strong organizational and communication skills.',
             },
