@@ -10,6 +10,13 @@
       "ag_loan_2y",
       "supervisory_aptitude"
     ],
+    "requirement_descriptions": {
+      "basic": "basic qualifications",
+      "credit_analysis_1y": "1 year of credit analysis experience",
+      "farm_business_2y": "2 years of farm business experience",
+      "ag_loan_2y": "2 years of agricultural and loan experience",
+      "supervisory_aptitude": "supervisory aptitude"
+    },
     "hybrid_thresholds": {
       "qualified": 5,
       "not_qualified": 2
@@ -26,6 +33,12 @@
       "clerical_2y",
       "supervisory_aptitude"
     ],
+    "requirement_descriptions": {
+      "typing_40wpm": "40 words per minute typing speed",
+      "basic_6m": "6 months of basic experience",
+      "clerical_2y": "2 years of clerical experience",
+      "supervisory_aptitude": "supervisory aptitude"
+    },
     "hybrid_thresholds": {
       "qualified": 4,
       "not_qualified": 1

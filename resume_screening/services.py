@@ -165,14 +165,16 @@ class ResumeScreeningService:
         total_reqs = job_config.num_requirements
         req_names = job_config.requirements
 
-        # List requirements that were met
+        # List requirements that were met (with human-readable descriptions)
         met_requirements = [
-            req_names[i] for i, val in enumerate(requirement_vector) if val == 1
+            job_config.get_requirement_description(req_names[i])
+            for i, val in enumerate(requirement_vector) if val == 1
         ]
 
-        # List requirements that were not met
+        # List requirements that were not met (with human-readable descriptions)
         unmet_requirements = [
-            req_names[i] for i, val in enumerate(requirement_vector) if val == 0
+            job_config.get_requirement_description(req_names[i])
+            for i, val in enumerate(requirement_vector) if val == 0
         ]
 
         if classification == 'LIKELY_QUALIFIED':

@@ -20,6 +20,7 @@ class JobConfig:
     requirements: List[str]
     hybrid_thresholds: Dict[str, int]
     file_prefix: str
+    requirement_descriptions: Optional[Dict[str, str]] = None
 
     def get_qualified_threshold(self) -> int:
         """Get the minimum requirements needed for LIKELY_QUALIFIED"""
@@ -28,6 +29,20 @@ class JobConfig:
     def get_not_qualified_threshold(self) -> int:
         """Get the maximum requirements for LIKELY_NOT_QUALIFIED"""
         return self.hybrid_thresholds.get('not_qualified', 0)
+
+    def get_requirement_description(self, requirement_code: str) -> str:
+        """
+        Get human-readable description for a requirement code
+
+        Args:
+            requirement_code: The requirement code (e.g., 'ag_loan_2y')
+
+        Returns:
+            Human-readable description or the code itself if not found
+        """
+        if self.requirement_descriptions and requirement_code in self.requirement_descriptions:
+            return self.requirement_descriptions[requirement_code]
+        return requirement_code
 
     def validate(self) -> bool:
         """Validate configuration consistency"""
@@ -102,7 +117,8 @@ class JobConfigManager:
                 num_questions=config_data['num_questions'],
                 requirements=config_data['requirements'],
                 hybrid_thresholds=config_data['hybrid_thresholds'],
-                file_prefix=config_data['file_prefix']
+                file_prefix=config_data['file_prefix'],
+                requirement_descriptions=config_data.get('requirement_descriptions')
             )
             config.validate()
             self._configs[job_code] = config
